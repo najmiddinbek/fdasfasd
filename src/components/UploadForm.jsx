@@ -43,7 +43,8 @@ export default function UploadForm() {
         const res = await uploadPhoto(formData)
 
         if (res?.msg) alert(`Mufavvaqiyatli: ${res?.msg}`)
-        if (res?.errorMessage) alert(`hatolik: ${res.errorMessage}`)
+        if (res?.errorMessage) alert(`hatolik`)
+        if (res?.errorMessage) console.log(res.errorMessage)
 
         setFiles([])
         formRef.current.reset()

@@ -39,11 +39,23 @@ async function savePhotosToLocal(formData) {
 }
 
 async function uploadPhotosToCloudinary(newFiles) {
-    const multiplePhotosPromise = newFiles.map(file => (
-        cloudinary.v2.uploader.upload(file.filepath, { folder: 'nextjs_upload' })
-    ))
+    try {
 
-    return await Promise.all(multiplePhotosPromise)
+        const multiplePhotosPromise = newFiles.map(async (file) => {
+            try {
+                const response = await cloudinary.v2.uploader.upload(file.filepath, { folder: 'nextjs_upload' });
+                console.log("Cloudinary API Response:", response);
+                return response;
+            } catch (error) {
+                throw new Error(`Error uploading to Cloudinary: ${error.message}`);
+            }
+        });
+
+        const photos = await Promise.all(multiplePhotosPromise);
+        return photos;
+    } catch (error) {
+        throw new Error(`Error uploading photos to Cloudinary: ${error.message}`);
+    }
 }
 
 const delay = (delayInms) => {
