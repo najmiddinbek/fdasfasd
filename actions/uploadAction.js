@@ -60,7 +60,6 @@ export async function uploadPhoto(formData) {
 
         // await delay(2000)
 
-
         const newPhotos = photos.map(photo => {
             const newPhoto = new Photo({ public_id: photo.public_id, secure_url: photo.secure_url })
             return newPhoto
@@ -71,9 +70,19 @@ export async function uploadPhoto(formData) {
         return { msg: 'Upload successfully uploaded' }
 
     } catch (error) {
-        return { errorMessage: error.message };
+        if (error.response && error.response.data) {
+            // Handle non-JSON response
+            console.error("Non-JSON response:", error.response.data);
+            return { errorMessage: "Non-JSON response" };
+        } else {
+            // Handle other errors
+            return { errorMessage: error.message };
+        }
     }
 }
+
+
+
 
 export async function getAllPhotos() {
     try {
